@@ -14,7 +14,15 @@ class Main(QMainWindow):
         self.pushButton.clicked.connect(self.showcoffe)
 
     def showcoffe(self):
-        pass
+        cur = self.con.cursor()
+        result = cur.execute('SELECT * FROM cofa').fetchall()
+        self.tableWidget.setRowCount(len(result))
+        self.tableWidget.setColumnCount(7)
+        self.tableWidget.setHorizontalHeaderLabels(["ID", "Название", "Степень обжарки", "Молотый/Зерновой", "Описание вкуса", "Цена", "Объём"])
+        for i, elem in enumerate(result):
+            for j, val in enumerate(elem):
+                self.tableWidget.setItem(i, j, QTableWidgetItem(str(val)))
+        self.tableWidget.resizeColumnsToContents()
 
 
 if __name__ == '__main__':
