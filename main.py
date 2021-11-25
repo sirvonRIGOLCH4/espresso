@@ -2,34 +2,35 @@ import sqlite3
 import sys
 
 from PyQt5 import uic
+
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5 import QtWidgets, QtCore
 
 
 class SecondWindow(QtWidgets.QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         super().__init__(parent, QtCore.Qt.Window)
+        self.parents = parent
         self.build2()
 
     def build2(self):
-        self.spisokItems = []
         uic.loadUi('addEditCoffeeForm.ui', self)
         self.con = sqlite3.connect('coffee.sqlite')
         cur = self.con.cursor()
         self.result = cur.execute('SELECT * FROM cofa').fetchall()
-        self.spisokItems = list(map(lambda x: str(x[0]), self.result))
-        self.comboBox.addItems(["Новый элемент БД"] + self.spisokItems)
-        self.comboBox_2.addItems(["Молотый", "В зернах"])
+        self.comboBox.addItems(["Новый элемент БД"] + list(map(lambda x: str(x[0]), self.result)))
+        self.comboBox_2.addItems(["молотый", "в зернах"])
         self.comboBox.currentIndexChanged[int].connect(self.loadItems)
+        self.pushButton_2.clicked.connect(self.update2)
 
     def loadItems(self, index):
         if index:
             self.data = self.result[index - 1]
-            self.lineEditName.setText(self.data[1])
-            self.lineEditDegree.setText(self.data[2])
-            self.comboBox_2.setCurrentIndex(self.data[3] == "Молотый")
-            self.lineEditTaste.setText(self.data[4])
+            self.lineEditName.setText(str(self.data[1]))
+            self.lineEditDegree.setText(str(self.data[2]))
+            self.comboBox_2.setCurrentIndex(self.data[3] == "в зернах")
+            self.lineEditTaste.setText(str(self.data[4]))
             self.lineEditCost.setText(str(self.data[5]))
             self.lineEditValue.setText(str(self.data[6]))
             self.update()
@@ -45,12 +46,35 @@ class SecondWindow(QtWidgets.QWidget):
         self.lineEditValue.clear()
         self.update()
 
+    def update2(self):
+        self.con = sqlite3.connect('coffee.sqlite')
+        cur = self.con.cursor()
+        self.id = self.comboBox.currentText()
+        self.name = self.lineEditName.text()
+        self.degree = self.lineEditDegree.text()
+        self.type = self.comboBox_2.currentText()
+        self.taste = self.lineEditTaste.text()
+        self.cost = self.lineEditCost.text()
+        self.value = self.lineEditValue.text()
+        if self.comboBox.currentIndex():
+            request = f"""UPDATE cofa SET name = '{self.name}', degree = '{self.degree}', type = '{self.type}',
+            taste = '{self.taste}', cost = '{self.cost}', value = '{self.value}' WHERE id = '{self.id}'"""
+            result = cur.execute(request).fetchone()
+        else:
+            request = f"""INSERT INTO cofa (name, degree, type, taste, cost, value) VALUES ('{self.name}', '{self.degree}', '{self.type}', '{self.taste}', '{self.cost}', '{self.value}')"""
+            result = cur.execute(request).fetchone()
+        self.con.commit()
+        self.clearbox()
+        self.con.close()
+        self.close()
+        self.parents.showcoffe()
 
 class Main(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.secondWin = None
         self.build()
+        self.showcoffe()
 
     def build(self):
         uic.loadUi('main.ui', self)
