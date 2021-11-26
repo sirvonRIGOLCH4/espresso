@@ -9,14 +9,15 @@ from PyQt5 import QtWidgets, QtCore
 
 
 class SecondWindow(QtWidgets.QWidget):
-    def __init__(self, parent):
+
+    def __init__(self, db, parent):
         super().__init__(parent, QtCore.Qt.Window)
         self.parents = parent
-        self.build2()
+        self.build2(db)
 
-    def build2(self):
+    def build2(self, db):
         uic.loadUi('addEditCoffeeForm.ui', self)
-        self.con = sqlite3.connect('coffee.sqlite')
+        self.con = sqlite3.connect(db)
         cur = self.con.cursor()
         self.result = cur.execute('SELECT * FROM cofa').fetchall()
         self.comboBox.addItems(["Новый элемент БД"] + list(map(lambda x: str(x[0]), self.result)))
@@ -72,7 +73,7 @@ class SecondWindow(QtWidgets.QWidget):
 class Main(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.secondWin = None
+        self.db = 'coffee.sqlite'
         self.build()
         self.showcoffe()
 
@@ -82,12 +83,11 @@ class Main(QMainWindow):
         self.pushButton_2.clicked.connect(self.openWin2)
 
     def openWin2(self):
-        if not self.secondWin:
-            self.secondWin = SecondWindow(self)
+        self.secondWin = SecondWindow(self.db, self)
         self.secondWin.show()
 
     def showcoffe(self):
-        self.con = sqlite3.connect('coffee.sqlite')
+        self.con = sqlite3.connect(self.db)
         cur = self.con.cursor()
         result = cur.execute('SELECT * FROM cofa').fetchall()
         self.tableWidget.setRowCount(len(result))
