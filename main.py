@@ -10,14 +10,14 @@ from PyQt5 import QtWidgets, QtCore
 
 class SecondWindow(QtWidgets.QWidget):
 
-    def __init__(self, db, parent):
+    def __init__(self, parent):
         super().__init__(parent, QtCore.Qt.Window)
         self.parents = parent
-        self.build2(db)
+        self.build2()
 
-    def build2(self, db):
+    def build2(self):
         uic.loadUi('addEditCoffeeForm.ui', self)
-        self.con = sqlite3.connect(db)
+        self.con = sqlite3.connect('coffee.sqlite')
         cur = self.con.cursor()
         self.result = cur.execute('SELECT * FROM cofa').fetchall()
         self.comboBox.addItems(["Новый элемент БД"] + list(map(lambda x: str(x[0]), self.result)))
@@ -73,7 +73,6 @@ class SecondWindow(QtWidgets.QWidget):
 class Main(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.db = 'coffee.sqlite'
         self.build()
         self.showcoffe()
 
@@ -83,11 +82,11 @@ class Main(QMainWindow):
         self.pushButton_2.clicked.connect(self.openWin2)
 
     def openWin2(self):
-        self.secondWin = SecondWindow(self.db, self)
+        self.secondWin = SecondWindow(self)
         self.secondWin.show()
 
     def showcoffe(self):
-        self.con = sqlite3.connect(self.db)
+        self.con = sqlite3.connect('coffee.sqlite')
         cur = self.con.cursor()
         result = cur.execute('SELECT * FROM cofa').fetchall()
         self.tableWidget.setRowCount(len(result))
