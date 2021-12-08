@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>419</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Редактор БД</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>401</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Элементы БД о кофе</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLineEdit" name="lineEditCost">
+      <property name="cursorPosition">
+       <number>0</number>
+      </property>
+      <property name="placeholderText">
+       <string>Цена</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLineEdit" name="lineEditName">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>Название сорта</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QComboBox" name="comboBox_2"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QComboBox" name="comboBox"/>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLineEdit" name="lineEditValue">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>Объем упаковки</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLineEdit" name="lineEditDegree">
+      <property name="placeholderText">
+       <string>Степень обжарки</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="0">
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>Редактирование БД</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLineEdit" name="lineEditTaste">
+      <property name="placeholderText">
+       <string>Описание вкуса</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

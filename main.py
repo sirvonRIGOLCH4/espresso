@@ -1,23 +1,19 @@
 import sqlite3
 import sys
 
-from PyQt5 import uic
-
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5 import QtWidgets, QtCore
+from main_ui import Ui_MainWindow
+from addEditCoffeeForm_ui import Ui_Form
 
-
-class SecondWindow(QtWidgets.QWidget):
+class SecondWindow(QtWidgets.QWidget, Ui_Form):
 
     def __init__(self, parent):
         super().__init__(parent, QtCore.Qt.Window)
+        self.setupUi(self)
         self.parents = parent
-        self.build2()
-
-    def build2(self):
-        uic.loadUi('addEditCoffeeForm.ui', self)
-        self.con = sqlite3.connect('coffee.sqlite')
+        self.con = sqlite3.connect('data\coffee.sqlite')
         cur = self.con.cursor()
         self.result = cur.execute('SELECT * FROM cofa').fetchall()
         self.comboBox.addItems(["Новый элемент БД"] + list(map(lambda x: str(x[0]), self.result)))
@@ -48,7 +44,7 @@ class SecondWindow(QtWidgets.QWidget):
         self.update()
 
     def update2(self):
-        self.con = sqlite3.connect('coffee.sqlite')
+        self.con = sqlite3.connect('data\coffee.sqlite')
         cur = self.con.cursor()
         self.id = self.comboBox.currentText()
         self.name = self.lineEditName.text()
@@ -70,23 +66,20 @@ class SecondWindow(QtWidgets.QWidget):
         self.close()
         self.parents.showcoffe()
 
-class Main(QMainWindow):
+class Main(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.build()
-        self.showcoffe()
-
-    def build(self):
-        uic.loadUi('main.ui', self)
+        self.setupUi(self)
         self.pushButton.clicked.connect(self.showcoffe)
         self.pushButton_2.clicked.connect(self.openWin2)
+        self.showcoffe()
 
     def openWin2(self):
         self.secondWin = SecondWindow(self)
         self.secondWin.show()
 
     def showcoffe(self):
-        self.con = sqlite3.connect('coffee.sqlite')
+        self.con = sqlite3.connect('data\coffee.sqlite')
         cur = self.con.cursor()
         result = cur.execute('SELECT * FROM cofa').fetchall()
         self.tableWidget.setRowCount(len(result))
